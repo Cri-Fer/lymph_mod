@@ -1,0 +1,40 @@
+## ---------------------------------------------------------------------
+## Copyright (C) 2023 by the lymph authors.
+##
+## This file is part of lymph.
+##
+## lymph is free software; you can redistribute it and/or modify
+## it under the terms of the GNU Lesser General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## lymph is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+## Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public License
+## along with lymph.  If not, see <http://www.gnu.org/licenses/>.
+## ---------------------------------------------------------------------
+
+# Author: Ivan Fumagalli <ivan.fumagalli@polimi.it>.
+
+pipelines:
+  default:
+    - step:
+        name: Sync GitHub Mirror
+        image: alpine/git:latest
+        clone:
+          enabled: false
+        script:
+          # Get an oauth access token using the client credentials, parsing out the token with jq.
+          - apt-get update && apt-get install -y curl jq
+          - >
+            export access_token=$(curl -s -X POST -u "${CLIENT_ID}:${CLIENT_SECRET}" \
+              https://bitbucket.org/site/oauth2/access_token \
+              -d grant_type=client_credentials -d scopes="repository"| jq --raw-output '.access_token')
+
+          # Clone through the oauth token.
+          - git clone --bare "https://x-token-auth:${access_token}@bitbucket.org/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}"
+          - cd lymph.git
+          - git push --mirror git@github.com:lymphlib/lymph.git
