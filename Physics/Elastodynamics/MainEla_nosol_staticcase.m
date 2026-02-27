@@ -15,7 +15,7 @@
 %>
 %==========================================================================
 
-function [Error, Matrices, U_h] = MainEla_nosol_staticcase(Data,Setup)
+function MainEla_nosol_staticcase(Data,Setup)
 
 %% Mesh
 
@@ -47,7 +47,7 @@ fprintf('\nDone\n')
 fprintf('\n------------------------------------------------------------------\n')
 
 %%EXTRMAT
-dest = "\\wsl.localhost\ubuntu\home\calu\PETSc_Test\Files";
+dest = "Output/";
 WritePetscMat(dest + 'matrix_A.dat', C);
 WritePetscMat(dest + 'matrix_b.dat', F);
 
