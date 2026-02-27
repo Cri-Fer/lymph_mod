@@ -22,6 +22,7 @@ addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
 addpath(genpath(fullfile(MyPhysicsPath,'Error')));
 addpath(genpath(fullfile(MyPhysicsPath,'PostProcessing')));
+addpath('/home/cristian/Desktop/Polimi/NAPDE/PROG/Condividere/Conv/petsc/share/petsc/matlab');
 
 %% Simulation - Setup
 run("../RunSetup.m")
@@ -40,4 +41,19 @@ else
 end
 
 %% Main
-[Error] = MainLaplacian(Data,Setup);
+[Error, Matrices, F, U] = MainLaplacian(Data,Setup);
+
+%% Send to PETSC
+fprintf('\nWriting Matrices in PETSC ... ');
+loc = '/home/cristian/Desktop/Polimi/NAPDE/PROG/Condividere/Conv/FilesLap/';
+if ~Data.MeshFromFile
+    PetscBinaryWrite([loc, 'A_', num2str(Data.N),'p',num2str(Data.degree) ,'.dat'], sparse(Matrices.A));
+    PetscBinaryWrite([loc, 'F_', num2str(Data.N),'p',num2str(Data.degree) ,'.dat'], F);
+    PetscBinaryWrite([loc, 'Um_', num2str(Data.N),'p',num2str(Data.degree) ,'.dat'], U);
+else 
+    PetscBinaryWrite([loc, 'A_19600', 'p',num2str(Data.degree) ,'.dat'], sparse(Matrices.A));
+    PetscBinaryWrite([loc, 'F_19600', 'p',num2str(Data.degree) ,'.dat'], F);
+    PetscBinaryWrite([loc, 'Um_19600','p',num2str(Data.degree) ,'.dat'], U);
+end
+fprintf('\nDone\n')
+fprintf('\n------------------------------------------------------------------\n')

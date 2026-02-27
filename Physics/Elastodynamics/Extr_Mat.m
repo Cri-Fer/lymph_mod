@@ -1,6 +1,6 @@
 N = Data.N;
 T = Data.T;
-
+addpath("/home/cristian/Desktop/Polimi/NAPDE/PROG/Condividere/Conv/petsc/share/petsc/matlab");
 % file_A = fopen('Output/matrix_A.dat', 'w');
 % fwrite(file_A, full(Matrices.Ela.A_E), 'double');
 % fclose(file_A);
@@ -16,9 +16,11 @@ T = Data.T;
 % file_uh = fopen('Output/vector_uex.dat', 'w');
 % fwrite(file_uh, Matrices.U_ex, 'double');
 % fclose(file_uh); 
-dest = "/home/cristian/Desktop/Polimi/Shared_data/Quarto Anno/NAPDE/PROG/Prova_PETSc3/Files/";
+dest = "/home/cristian/Desktop/Polimi/NAPDE/PROG/Condividere/Conv/Files";
 WritePetscMat(dest + 'matrix_A.dat', Matrices.Ela.A_E);
 WritePetscVec(dest + 'vector_b.dat', Matrices.F);
-WritePetscVec(dest + 'vector_uex.dat', Matrices.U_ex);
-WritePetscVec(dest + 'vector_uhm.dat', U_h(1:600));
+% WritePetscVec(dest + 'vector_uex.dat', Matrices.U_ex);
+destin = '/home/cristian/Desktop/Polimi/NAPDE/PROG/Condividere/Conv/Files/vector_uhm.dat';
+PetscBinaryWrite(destin, U_h(1:length(U_h)/2));
+% WritePetscVec(dest + 'vector_uhm.dat', U_h(1:length(U_h)/2));
   

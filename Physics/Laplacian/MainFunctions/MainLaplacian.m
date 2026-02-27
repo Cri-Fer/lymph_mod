@@ -15,7 +15,7 @@
 %>
 %==========================================================================
 
-function [Error] = MainLaplacian(Data,Setup)
+function [Error, Matrices, F, U] = MainLaplacian(Data,Setup)
 
 fprintf('\nSolution of the Poisson problem \n');
 fprintf('... here display some info about the simulation ... \n');

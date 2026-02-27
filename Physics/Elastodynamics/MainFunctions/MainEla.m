@@ -15,7 +15,7 @@
 %>
 %==========================================================================
 
-function [Error, Matrices, U_h] = MainEla(Data,Setup)
+function [C, U_h, F] = MainEla(Data,Setup)
 
 fprintf('\nSolution of wave propagation problems \n');
 fprintf('... here display some info about the simulation ... \n');
@@ -69,7 +69,7 @@ if ~Setup.isError; clear Matrices; end
 if strcmp(Data.timeint,'newmark')
     fprintf('\nNewmark time integration ... \n');
     tic    
-    [U_h, Matrices.F] = NewmarkScheme(Setup, Data, femregion, mesh, A, B, C, U_old);
+    [U_h, F] = NewmarkScheme(Setup, Data, femregion, mesh, A, B, C, U_old);
     toc
     fprintf('\nDone\n')
     fprintf('\n------------------------------------------------------------------\n')
@@ -82,20 +82,20 @@ end
 
 %% Post-processing final time
 
-if Setup.isSaveCSV || Setup.isSaveVTK || Setup.isSaveSolution || Setup.isPlotSolution
-    PostProcessSolution(Setup, Data, mesh, femregion, floor(Data.T/Data.dt)+1, U_h, Data.T);
-end
+%if Setup.isSaveCSV || Setup.isSaveVTK || Setup.isSaveSolution || Setup.isPlotSolution
+%    PostProcessSolution(Setup, Data, mesh, femregion, floor(Data.T/Data.dt)+1, U_h, Data.T);
+%end
 
 %% Compute Errors
 
-if Setup.isError    
-    fprintf('\nComputing Errors ... \n');
-    [Error, Matrices.U_ex] = ComputeErrors(Data, femregion, Matrices, U_h);
-    fprintf('Done\n')
-    fprintf('\n------------------------------------------------------------------\n')
-else   
-    Error = [];
-end
+% if Setup.isError    
+%     fprintf('\nComputing Errors ... \n');
+%     [Error, UEX] = ComputeErrors(Data, femregion, Matrices, U_h);
+%     fprintf('Done\n')
+%     fprintf('\n------------------------------------------------------------------\n')
+% else   
+%     Error = [];
+% end
 
 fprintf('\nBye \n');
 

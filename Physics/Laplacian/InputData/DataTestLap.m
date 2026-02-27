@@ -8,11 +8,11 @@ Data.LabBcLap = 'DDDD';    % Dirichlet/Neumann/Abso
 
 %% Geometrical properties 
 Data.domain       = [0 1 0 1]; % domain bounds for a new mesh
-Data.N            = 50;     % number of elements for a new mesh
-Data.MeshFromFile = false;      % read mesh from file
+Data.N            = 1;     % number of elements for a new mesh
+Data.MeshFromFile = true;      % read mesh from file
 Data.FolderName   = 'InputMesh';
 Data.VTKMeshFileName = 'Mesh.vtk';
-Data.meshfileseq  = 'DataTestDCLap_1000_el.mat'; %filename for mesh
+Data.meshfileseq  = 'Quad_19600_el.mat'; %filename for mesh
 
 %% Space discretization
 Data.degree  = 3;        % Polynomial degree
@@ -22,28 +22,27 @@ Data.penalty_coeff = 10; % Penalty coefficient
 Data.quadrature = "ST";       % Quadrature type: ST/QF
 
 %% Visualization settings
-Data.PlotExact         = true;
-Data.PlotGridSol       = true;
+Data.PlotExact         = false;
+Data.PlotGridSol       = false;
 Data.NPtsVisualization = 5;
 
 %% Material properties 
-Data.mu       = {@(x,y) (x+y.^2+1)};
+Data.mu       = {@(x,y) 2};
 
 % Forcing Term
-Data.source = {@(x,y) - (3*(y.^2 + x + 1))./(4*(x.^2 + y).^(1/2)) ...
-                      - 3*(x.^2 + y).^(1/2).*(y.^2 + x + 1) ...
-                      - 3*x.*(x.^2 + y).^(1/2) ...
-                      - 3*y.*(x.^2 + y).^(1/2) ...
-                      - (3*x.^2.*(y.^2 + x + 1))./(x.^2 + y).^(1/2)};
+Data.source = {@(x,y) 8*pi^2 * sin(2*pi*x).* cos(2*pi*y)};
 
 
 % Boundary Conditions
 Data.DirBC    = {@(x,y) (x.^2+y).^1.5};
 
 % Exact Solution (if any)
-Data.u_ex     =  {@(x,y) (x.^2+y).^1.5};
+Data.u_ex     =  {@(x,y) sin(2*pi*x).* cos(2*pi*y)};
 
 % Gradient of the Exact Solution
-Data.gradu_ex =  {@(x,y)   3*x.*(x.^2 + y).^(1/2); ...
-                  @(x,y)  (3*(x.^2 + y).^(1/2))/2};
+Data.gradu_ex =  {@(x,y)   2*pi*cos(2*pi*x).*cos(2*pi*y); ...
+                  @(x,y)  -2*pi*sin(2*pi*x).*sin(2*pi*y)};
+
+%% Do you want to solve it?
+Data.solve = false;
 
