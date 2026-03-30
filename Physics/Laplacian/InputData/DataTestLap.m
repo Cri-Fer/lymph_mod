@@ -9,7 +9,7 @@ Data.LabBcLap = 'DDDD';    % Dirichlet/Neumann/Abso
 %% Geometrical properties 
 Data.domain       = [0 1 0 1]; % domain bounds for a new mesh
 Data.N            = 1;     % number of elements for a new mesh
-Data.MeshFromFile = true;      % read mesh from file
+Data.MeshFromFile = false;      % read mesh from file
 Data.FolderName   = 'InputMesh';
 Data.VTKMeshFileName = 'Mesh.vtk';
 Data.meshfileseq  = 'Quad_19600_el.mat'; %filename for mesh
@@ -30,11 +30,11 @@ Data.NPtsVisualization = 5;
 Data.mu       = {@(x,y) 2};
 
 % Forcing Term
-Data.source = {@(x,y) 8*pi^2 * sin(2*pi*x).* cos(2*pi*y)};
+Data.source = {@(x,y) 0};
 
 
 % Boundary Conditions
-Data.DirBC    = {@(x,y) (x.^2+y).^1.5};
+Data.DirBC    = {@(x,y) 0};
 
 % Exact Solution (if any)
 Data.u_ex     =  {@(x,y) sin(2*pi*x).* cos(2*pi*y)};

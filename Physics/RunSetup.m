@@ -23,7 +23,7 @@ Setup.isPlotMesh = 0;
 Setup.isSaveVTKMesh = 0;
 
 % Plot solution y/n
-Setup.isPlotSolution = 1;
+Setup.isPlotSolution = 0;
 
 % Save solution y/n -> .mat file
 Setup.isSaveSolution = 0;
@@ -37,4 +37,4 @@ Setup.isSaveVTK = 0;
 Setup.OutFolderVTK = 'OutputVTK';
 
 % Compute errors y/n
-Setup.isError = 1;
+Setup.isError = 0;
