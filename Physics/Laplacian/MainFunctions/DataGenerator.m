@@ -1,4 +1,4 @@
-function [F, Matrices] = DataGenerator(Data,Setup)
+function [Matrices, F] = DataGenerator(Data,Setup)
 %> @file  MainLaplacian.m
 %> @author The Lymph Team
 %> @date 26 July 2024
