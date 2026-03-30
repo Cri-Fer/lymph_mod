@@ -21,7 +21,7 @@ addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
-addpath('/home/david/Project/PETSc_Test/petsc/share/petsc/matlab');
+addpath('/home/cri/petsc/share/petsc/matlab');
 
 %% Simulation - Setup
 run("../RunSetup.m")
@@ -51,7 +51,7 @@ end
 [Matrices, F] = DataGenerator(Data,Setup);
 
 % Send to PETSC
-loc = '/home/david/NAPDE/shared_files_directory_NAPDE/lymph_mod/Physics/Laplacian/Matrices/';
+loc = 'Matrices/';
 PetscBinaryWrite([loc, 'A_', num2str(i) ,'.dat'], sparse(Matrices.A));
 PetscBinaryWrite([loc, 'F_', num2str(i) ,'.dat'], F);
 T = table(Data.N, Data.p, 2, ...
