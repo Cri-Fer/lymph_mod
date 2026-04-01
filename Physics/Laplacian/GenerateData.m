@@ -45,7 +45,7 @@ for j = 1:height(dataset)
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
     ii = dataset.ID(j);
-
+    fprintf("========= Case id: %d =========", ii);
     Data.mu = {str2func(dataset.mu{j})}; 
     Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
     Data.DirBC  = {str2func(dataset.g{j})};
