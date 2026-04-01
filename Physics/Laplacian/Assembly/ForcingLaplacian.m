@@ -30,7 +30,7 @@ function [F] = ForcingLaplacian(Data, neighbor, femregion)
     
     % Visualization of computational progress
     prog = 0;
-    fprintf(1,'Computation Progress: %3d%%\n',prog);
+    fprintf(1,'\tComputation Progress: %3d%%\n',prog);
     
     for ie = 1:femregion.nel
         

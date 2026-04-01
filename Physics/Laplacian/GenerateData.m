@@ -21,39 +21,40 @@ addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
-addpath('/home/cri/petsc/share/petsc/matlab');
+addpath('/home/cristian/petsc/share/petsc/matlab');
 
 %% Simulation - Setup
 run("../RunSetup.m")
 
 %% Input Data - Boundary conditions - Forcing term
-sources = [{@(x,y) 8*pi^2 * sin(2*pi*x).* cos(2*pi*y)}];
+
 BCs     = [{@(x,y) (x.^2+y).^1.5}];
 
 DataTestLap;
 Data.N = 100;
 Data.p = 1;
 Data.mu = {@(x,y) 2};
+sources = [{@(x,y) mu(x,y)*(- 3/(4*(x.^2 + y).^(1/2)) - 3*(x.^2 + y).^(1/2) - (3*x.^2)./(x.^2 + y).^(1/2))}];
 Data.source = sources(1);
 Data.DirBC = BCs(1);
 i = 1;
 % Mesh Generation
 
-if Data.MeshFromFile
+%if Data.MeshFromFile
     % Load existing mesh
-    Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
-else
+%    Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
+%else
     % Create a new mesh
     Data.meshfile = MakeMeshMonodomain(Data,Data.N,Data.domain,Data.FolderName,Data.meshfileseq,'P','laplacian');
-end
+%end
 
 % Main
-[Matrices, F] = DataGenerator(Data,Setup);
+[Matrices, F, Data] = DataGenerator(Data,Setup);
 
 % Send to PETSC
 loc = 'Matrices/';
 PetscBinaryWrite([loc, 'A_', num2str(i) ,'.dat'], sparse(Matrices.A));
 PetscBinaryWrite([loc, 'F_', num2str(i) ,'.dat'], F);
-T = table(Data.N, Data.p, 2, ...
-    'VariableNames', {'N', 'p', 'mu'});
+T = table(Data.N, Data.h , Data.p, 2, ...
+    'VariableNames', {'N', 'h','p', 'mu', 'f(x,y)', 'g(x,y)'});
      writetable(T, 'dati.csv');

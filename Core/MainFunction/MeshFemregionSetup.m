@@ -9,9 +9,9 @@ function [mesh, femregion, h] = MeshFemregionSetup(Setup, Data, TagEl, LabelEl)
     h = max(sqrt((mesh.region.BBox(:,1)-mesh.region.BBox(:,2)).^2  ...
         + (mesh.region.BBox(:,3)-mesh.region.BBox(:,4)).^2));
     
-    fprintf(['Number of Polygonal Elements: ', num2str(mesh.region.ne)]);
-    fprintf(['\nMesh size: ', num2str(h)]);
-    fprintf('\n\n------------------------------------------------------------------\n')
+    % fprintf(['Number of Polygonal Elements: ', num2str(mesh.region.ne)]);
+    % fprintf(['\nMesh size: ', num2str(h)]);
+    % fprintf('\n\n------------------------------------------------------------------\n')
 
     % checking tags for elements
     for i = 1 : length(mesh.region.id)

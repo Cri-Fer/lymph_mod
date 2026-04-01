@@ -29,7 +29,7 @@ while(It<=MaxIter && Err>Tol)
   [Pc,A] = PolyMshr_CntrdPly(Element,Node,NElem);
   Area = sum(abs(A));
   Err = sqrt(sum((A.^2).*sum((Pc-P).*(Pc-P),2)))*NElem/Area^1.5;
-  fprintf('It: %3d   Error: %1.3e\n',It,Err); It=It+1;
+  %fprintf('It: %3d   Error: %1.3e\n',It,Err); It=It+1;
   %if NElem<=2000, PolyMshr_PlotMsh(Node,Element,NElem); end; 
 end
 [Node,Element] = PolyMshr_ExtrNds(NElem,Node,Element);  %Extract node list
