@@ -20,6 +20,7 @@ MyPhysicsPath = pwd;
 addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
+addpath(genpath(fullfile(MyPhysicsPath,'MESH')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 addpath('/home/cristian/petsc/share/petsc/matlab');
 
@@ -27,14 +28,16 @@ addpath('/home/cristian/petsc/share/petsc/matlab');
 run("../RunSetup.m")
 
 %% Input Data - Boundary conditions - Forcing term
+% First I have generated the meshes for every N,it's the most expensive step
+% Then I read that meshes and use different polynomial degrees.
 
 BCs     = [{@(x,y) (x.^2+y).^1.5}];
 
 DataTestLap;
-Data.N = 100;
+N = [1000; 2000; 3000; 4000; 5000];
 Data.p = 1;
 Data.mu = {@(x,y) 2};
-sources = [{@(x,y) mu(x,y)*(- 3/(4*(x.^2 + y).^(1/2)) - 3*(x.^2 + y).^(1/2) - (3*x.^2)./(x.^2 + y).^(1/2))}];
+sources = [{@(x,y) mu(x,y)*(- 3./(4*(x.^2 + y).^(1/2)) - 3*(x.^2 + y).^(1/2) - (3*x.^2)./(x.^2 + y).^(1/2))}];
 Data.source = sources(1);
 Data.DirBC = BCs(1);
 i = 1;
@@ -45,16 +48,22 @@ i = 1;
 %    Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
 %else
     % Create a new mesh
-    Data.meshfile = MakeMeshMonodomain(Data,Data.N,Data.domain,Data.FolderName,Data.meshfileseq,'P','laplacian');
+    if isempty(gcp('nocreate'))
+        parpool(4);
+    end
+
+    parfor i=1:5
+        MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,meshname,'P','laplacian');
+    end
 %end
 
 % Main
-[Matrices, F, Data] = DataGenerator(Data,Setup);
-
-% Send to PETSC
-loc = 'Matrices/';
-PetscBinaryWrite([loc, 'A_', num2str(i) ,'.dat'], sparse(Matrices.A));
-PetscBinaryWrite([loc, 'F_', num2str(i) ,'.dat'], F);
-T = table(Data.N, Data.h , Data.p, 2, ...
-    'VariableNames', {'N', 'h','p', 'mu', 'f(x,y)', 'g(x,y)'});
-     writetable(T, 'dati.csv');
+% [Matrices, F, Data] = DataGenerator(Data,Setup);
+% 
+% % Send to PETSC
+% loc = 'Matrices/';
+% PetscBinaryWrite([loc, 'A_', num2str(i) ,'.dat'], sparse(Matrices.A));
+% PetscBinaryWrite([loc, 'F_', num2str(i) ,'.dat'], F);
+% T = table(Data.N, Data.h , Data.p, 2, ...
+%     'VariableNames', {'N', 'h','p', 'mu', 'f(x,y)', 'g(x,y)'});
+%      writetable(T, 'dati.csv');
