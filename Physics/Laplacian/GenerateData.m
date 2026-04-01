@@ -40,28 +40,29 @@ dataset.F_name = strings(height(dataset),1);
 % end
 loc = 'Matrices/';
 DataTestLap;
-mu_diversi = 7;
-for j = 1:height(dataset)
-    
-    Data.N = dataset.N(j);
-    Data.degree = dataset.p(j);
-    ii = dataset.ID(j);
-    fprintf("========= Case id: %d =========", ii);
-    Data.mu = {str2func(dataset.mu{j})}; 
-    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
-    Data.DirBC  = {str2func(dataset.g{j})};
-    name = [num2str(Data.N), '_el.mat'];
-
-    Data.meshfile = fullfile(Data.FolderName, name);
-    
-    % Efficient because it reads the mesh
-    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
-    [F] = ForcingLaplacian(Data, mesh.neighbor, femregion);
-
-    PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
-    
-    
-end
+mu_diversi = 8; %mu diversi + 1, perché non c'è lo zero. Il primo è 1,
+%  l'latro diverso è alla riga 9
+% for j = 1:height(dataset)
+% 
+%     Data.N = dataset.N(j);
+%     Data.degree = dataset.p(j);
+%     ii = dataset.ID(j);
+%     fprintf("========= Case id: %d =========", ii);
+%     Data.mu = {str2func(dataset.mu{j})}; 
+%     Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+%     Data.DirBC  = {str2func(dataset.g{j})};
+%     name = [num2str(Data.N), '_el.mat'];
+% 
+%     Data.meshfile = fullfile(Data.FolderName, name);
+% 
+%     % Efficient because it reads the mesh
+%     [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
+%     [F] = ForcingLaplacian(Data, mesh.neighbor, femregion);
+% 
+%     PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
+% 
+% 
+% end
 
 for j = 1:mu_diversi:height(dataset)
     Data.N = dataset.N(j);
