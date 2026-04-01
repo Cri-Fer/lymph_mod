@@ -36,6 +36,7 @@ BCs     = [{@(x,y) (x.^2+y).^1.5}];
 DataTestLap;
 N = [1000; 2000; 3000; 4000; 5000];
 Data.p = 1;
+meshname = '';
 Data.mu = {@(x,y) 2};
 sources = [{@(x,y) 2*(- 3./(4*(x.^2 + y).^(1/2)) - 3*(x.^2 + y).^(1/2) - (3*x.^2)./(x.^2 + y).^(1/2))}];
 Data.source = sources(1);
