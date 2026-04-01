@@ -40,7 +40,7 @@ h_vec = zeros(height(dataset),1);
 loc = 'Matrices/';
 DataTestLap;
 
-for j = 1:8%height(dataset)
+for j = 1:height(dataset)
     
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
