@@ -32,14 +32,15 @@ run("../RunSetup.m")
 % Then I read that meshes and use different polynomial degrees.
 dataset = readtable('InputData.csv');
 h_vec = zeros(height(dataset),1);
-
+dataset.A_name = strings(height(dataset),1);
+dataset.F_name = strings(height(dataset),1);
 % Mesh Generation
 % if isempty(gcp('nocreate'))
 %     parpool(4);
 % end
 loc = 'Matrices/';
 DataTestLap;
-
+mu_diversi = 7;
 for j = 1:height(dataset)
     
     Data.N = dataset.N(j);
@@ -52,14 +53,38 @@ for j = 1:height(dataset)
     name = [num2str(Data.N), '_el.mat'];
 
     Data.meshfile = fullfile(Data.FolderName, name);
+    
+    % Efficient because it reads the mesh
+    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
+    [F] = ForcingLaplacian(Data, mesh.neighbor, femregion);
 
-    [Matrices, F, h] = DataGenerator(Data,Setup);
-    PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
     PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
-    h_vec(j) = h;
+    
+    
 end
 
+for j = 1:mu_diversi:height(dataset)
+    Data.N = dataset.N(j);
+    Data.degree = dataset.p(j);
+    ii = dataset.ID(j);
+    fprintf("========= Case id: %d =========", ii);
+    Data.mu = {str2func(dataset.mu{j})}; 
+    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+    Data.DirBC  = {str2func(dataset.g{j})};
+    name = [num2str(Data.N), '_el.mat'];
+
+    Data.meshfile = fullfile(Data.FolderName, name);
+    
+    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
+
+    [Matrices] = MatrixLaplacianST(Data, mesh.neighbor, femregion);
+
+    PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
+    dataset.A_name(j) = "A" + ii + ".dat";
+
+end
 dataset.h = h_vec;
+dataset.F_name = "F" + dataset.ID + ".dat";
 writetable(dataset, 'dati.csv');
 %if Data.MeshFromFile
     % Load existing mesh

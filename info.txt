@@ -6,7 +6,12 @@ so we have 5 x 3 x 4 = 60 sample per function and BC
 if we use 7 f and g we will have
 420 sample
 if we choose theta from 0.05 to 0.95 we get 19 values for theta
-so 420 x 19 = 7980 samples
+so 420 x 19 = 7980 samples -> raggiungti in c++
 
 This are the samples because we want train our NN to predict the time for
-solving the system with AMG
+solving the system with AMG. 
+
+
+LA matrice A è uguale fin tanto che mu resta uguale e N resta uguale.
+NB: mantenendo lo stesso ordine di dati nel csv, ma cambiando il numero di mu che si usano il tutto non dovrebbe rompersi
+basta cambiare con il numero di mu diversi
