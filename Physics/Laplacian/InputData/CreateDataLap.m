@@ -1,7 +1,6 @@
-%% Poisson problem in [0,1]^2 with Dirichlet conditions
-
-Data.name = 'ConvTestLapDir';
-
+function Data = CreateDataLap()
+%CREATEDATALAP Summary of this function goes here
+%   Detailed explanation goes here
 Data.TagElLap = 1;         % Element tag
 Data.TagBcLap = [2 3 4 5]; % Boundary tag
 Data.LabBcLap = 'DDDD';    % Dirichlet/Neumann/Abso
@@ -12,7 +11,7 @@ Data.N            = 1;     % number of elements for a new mesh
 Data.MeshFromFile = true;      % read mesh from file
 Data.FolderName   = 'MESH';
 Data.VTKMeshFileName = 'Mesh.vtk';
-Data.meshfileseq  = 'Quad_19600_el.mat'; %filename for mesh
+Data.meshfileseq  = ''; %filename for mesh
 
 %% Space discretization
 Data.degree  = 3;        % Polynomial degree
@@ -36,13 +35,4 @@ Data.source = {@(x,y) 0};
 % Boundary Conditions
 Data.DirBC    = {@(x,y) 0};
 
-% Exact Solution (if any)
-Data.u_ex     =  {@(x,y) sin(2*pi*x).* cos(2*pi*y)};
-
-% Gradient of the Exact Solution
-Data.gradu_ex =  {@(x,y)   2*pi*cos(2*pi*x).*cos(2*pi*y); ...
-                  @(x,y)  -2*pi*sin(2*pi*x).*sin(2*pi*y)};
-
-%% Do you want to solve it?
-Data.solve = false;
-
+end

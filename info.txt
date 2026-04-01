@@ -1,0 +1,12 @@
+We will have 
+N  = {1000, 2000, 3000, 4000, 5000}
+p  = {1, 2, 3}
+mu = {0.1, 1, 10, 100}
+so we have 5 x 3 x 4 = 60 sample per function and BC
+if we use 7 f and g we will have
+420 sample
+if we choose theta from 0.05 to 0.95 we get 19 values for theta
+so 420 x 19 = 7980 samples
+
+This are the samples because we want train our NN to predict the time for
+solving the system with AMG

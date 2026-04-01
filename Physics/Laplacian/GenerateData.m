@@ -22,7 +22,7 @@ addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
 addpath(genpath(fullfile(MyPhysicsPath,'MESH')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
-addpath('/home/cristian/petsc/share/petsc/matlab');
+addpath('~/petsc/share/petsc/matlab');
 
 %% Simulation - Setup
 run("../RunSetup.m")
@@ -30,41 +30,59 @@ run("../RunSetup.m")
 %% Input Data - Boundary conditions - Forcing term
 % First I have generated the meshes for every N,it's the most expensive step
 % Then I read that meshes and use different polynomial degrees.
+dataset = readtable('InputData.csv');
+h_vec = zeros(height(dataset),1);
 
-BCs     = [{@(x,y) (x.^2+y).^1.5}];
-
-DataTestLap;
-N = [1000; 2000; 3000; 4000; 5000];
-Data.p = 1;
-meshname = '';
-Data.mu = {@(x,y) 2};
-sources = [{@(x,y) 2*(- 3./(4*(x.^2 + y).^(1/2)) - 3*(x.^2 + y).^(1/2) - (3*x.^2)./(x.^2 + y).^(1/2))}];
-Data.source = sources(1);
-Data.DirBC = BCs(1);
-i = 1;
 % Mesh Generation
+% if isempty(gcp('nocreate'))
+%     parpool(4);
+% end
+loc = 'Matrices/';
+DataTestLap;
 
+for j = 1:8%height(dataset)
+    
+    Data.N = dataset.N(j);
+    Data.degree = dataset.p(j);
+    ii = dataset.ID(j);
+
+    Data.mu = {str2func(dataset.mu{j})}; 
+    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+    Data.DirBC  = {str2func(dataset.g{j})};
+    name = [num2str(Data.N), '_el.mat'];
+
+    Data.meshfile = fullfile(Data.FolderName, name);
+
+    [Matrices, F, h] = DataGenerator(Data,Setup);
+    PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
+    PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
+    h_vec(j) = h;
+end
+
+dataset.h = h_vec;
+writetable(dataset, 'dati.csv');
 %if Data.MeshFromFile
     % Load existing mesh
-%    Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
+    %Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
 %else
     % Create a new mesh
-    if isempty(gcp('nocreate'))
-        parpool(4);
-    end
-
-    parfor i=1:5
-        MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,meshname,'P','laplacian');
-    end
+    % if isempty(gcp('nocreate'))
+    %     parpool(4);
+    % end
+    % 
+    % parfor i=1:5 % This generate the 5 meshes
+    %     MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,meshname,'P','laplacian');
+    % end
 %end
-
+% 
 % Main
 % [Matrices, F, Data] = DataGenerator(Data,Setup);
 % 
 % % Send to PETSC
 % loc = 'Matrices/';
-% PetscBinaryWrite([loc, 'A_', num2str(i) ,'.dat'], sparse(Matrices.A));
-% PetscBinaryWrite([loc, 'F_', num2str(i) ,'.dat'], F);
+% PetscBinaryWrite([loc, 'A', num2str(id) ,'.dat'], sparse(Matrices.A));
+% PetscBinaryWrite([loc, 'F', num2str(id) ,'.dat'], F);
+% 
 % T = table(Data.N, Data.h , Data.p, 2, ...
 %     'VariableNames', {'N', 'h','p', 'mu', 'f(x,y)', 'g(x,y)'});
 %      writetable(T, 'dati.csv');

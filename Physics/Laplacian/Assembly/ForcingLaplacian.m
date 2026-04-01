@@ -76,6 +76,7 @@ function [F] = ForcingLaplacian(Data, neighbor, femregion)
             
             % Vector assembling
             F_loc = F_loc + (dx.*phiq)'*fSource;
+           
             
         end
             

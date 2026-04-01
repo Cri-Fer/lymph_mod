@@ -1,4 +1,4 @@
-function [Matrices, F, Data] = DataGenerator(Data,Setup)
+function [Matrices, F, h] = DataGenerator(Data,Setup)
 %> @file  MainLaplacian.m
 %> @author The Lymph Team
 %> @date 26 July 2024
@@ -16,7 +16,7 @@ function [Matrices, F, Data] = DataGenerator(Data,Setup)
 %>
 %==========================================================================
 %% Mesh setup
-[mesh, femregion, Data.h] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
+[mesh, femregion, h] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
 
 %% Matrix Assembly
 switch Data.quadrature
