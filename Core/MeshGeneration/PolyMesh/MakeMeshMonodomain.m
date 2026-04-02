@@ -80,5 +80,6 @@ end
 [region,neighbor] = MakeNeighbor(Data,region,SimType);
 
 %% Otuput 
-FileNameOut = strcat(FolderName,'/',FileName,'_',num2str(region.ne),'_el.mat');
+%FileNameOut = strcat(FolderName,'/',FileName,'_',num2str(region.ne),'_el.mat');
+FileNameOut = strcat(FolderName,'/',num2str(region.ne),'_el.mat');
 save(FileNameOut,'region','neighbor');

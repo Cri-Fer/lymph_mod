@@ -20,7 +20,7 @@ MyPhysicsPath = pwd;
 addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
-addpath(genpath(fullfile(MyPhysicsPath,'MESH')));
+addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESHES')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 addpath('~/petsc/share/petsc/matlab');
 
@@ -41,27 +41,27 @@ dataset.F_name = strings(height(dataset),1);
 loc = 'Matrices/';
 DataTestLap;
 mu_diversi = 7; 
-for j = 1:height(dataset)
-
-    Data.N = dataset.N(j);
-    Data.degree = dataset.p(j);
-    ii = dataset.ID(j);
-    fprintf("========= Case id: %d =========", ii);
-    Data.mu = {str2func(dataset.mu{j})}; 
-    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
-    Data.DirBC  = {str2func(dataset.g{j})};
-    name = [num2str(Data.N), '_el.mat'];
-
-    Data.meshfile = fullfile(Data.FolderName, name);
-
-    % Efficient because it reads the mesh
-    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
-    [F] = ForcingLaplacian(Data, mesh.neighbor, femregion);
-
-    PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
-
-
-end
+% for j = 1:height(dataset)
+% 
+%     Data.N = dataset.N(j);
+%     Data.degree = dataset.p(j);
+%     ii = dataset.ID(j);
+%     fprintf("========= Case id: %d =========", ii);
+%     Data.mu = {str2func(dataset.mu{j})}; 
+%     Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+%     Data.DirBC  = {str2func(dataset.g{j})};
+%     name = [num2str(Data.N), '_el.mat'];
+% 
+%     Data.meshfile = fullfile(Data.FolderName, name);
+% 
+%     % Efficient because it reads the mesh
+%     [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
+%     [F] = ForcingLaplacian(Data, mesh.neighbor, femregion);
+% 
+%     PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
+% 
+% 
+% end
 
 for j = 1:mu_diversi:height(dataset)
     Data.N = dataset.N(j);
