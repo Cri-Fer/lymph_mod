@@ -20,7 +20,7 @@ MyPhysicsPath = pwd;
 addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
-addpath(genpath(fullfile(MyPhysicsPath,'MESH')));
+addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESH')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 addpath('~/petsc/share/petsc/matlab');
 
@@ -33,7 +33,7 @@ run("../RunSetup.m")
 DataTestLap;
 % Mesh Generation
 
-N = [16000; 17000; 18000; 19000];
+N = [10:1.5:19, 21]' .* 10^3;
 
 if Data.MeshFromFile
     %Load existing mesh
@@ -41,9 +41,9 @@ if Data.MeshFromFile
 else
     %Create a new mesh
     if isempty(gcp('nocreate'))
-        parpool(5);
+        parpool(4);
     end
-    parfor i=1:5 % This generate the 5 meshes
+    parfor i=1:length(N) % This generate the 5 meshes
         MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,'','P','laplacian');
     end
 
