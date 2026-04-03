@@ -34,19 +34,18 @@ DataTestLap;
 
 N = [10:1.5:19, 21]' .* 10^3;
 fprintf("Starting to generate meshes");
-if Data.MeshFromFile
-    %Load existing mesh
-    Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
-else
-    %Create a new mesh
-    if isempty(gcp('nocreate'))
-        parpool(4);
-    end
+fprintf("================================");
+
+% Legge il numero di core assegnati da PBS (variabile d'ambiente)
+nCores = str2double(getenv('PBS_NCPUS'));
+if isnan(nCores), nCores = 4; end % Default se lanciato localmente
+
+if isempty(gcp('nocreate'))
+    parpool(nCores);
+end
     parfor i=1:length(N) % This generate the meshes
 	fprintf("============== Start MESH N = %d ==============", N(i));
         MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,'','P','laplacian');
 	fprintf("============== End MESH N = %d ==============", N(i));
     end
-
-end
 
