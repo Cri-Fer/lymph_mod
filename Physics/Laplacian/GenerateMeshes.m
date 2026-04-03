@@ -34,7 +34,7 @@ DataTestLap;
 % Mesh Generation
 
 N = [10:1.5:19, 21]' .* 10^3;
-
+fprintf("Starting to generate meshes");
 if Data.MeshFromFile
     %Load existing mesh
     Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
@@ -43,8 +43,10 @@ else
     if isempty(gcp('nocreate'))
         parpool(4);
     end
-    parfor i=1:length(N) % This generate the 5 meshes
+    parfor i=1:length(N) % This generate the meshes
+	fprintf("============== Start MESH N = %d ==============", N(i));
         MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,'','P','laplacian');
+	fprintf("============== End MESH N = %d ==============", N(i));
     end
 
 end
