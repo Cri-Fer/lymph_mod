@@ -33,8 +33,13 @@ DataTestLap;
 % Mesh Generation
 
 N = [10:1.5:19, 21]' .* 10^3;
-fprintf("Starting to generate meshes\n");
-fprintf("================================\n");
+% fprintf("Starting to generate meshes\n");
+% fprintf("================================\n");
+
+logfile = fullfile(pwd, 'generate_meshes_runtime.log');
+fid = fopen(logfile, 'a');
+fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
+fclose(fid);
 
 % Legge il numero di core assegnati da PBS (variabile d'ambiente)
 nCores = str2double(getenv('NCPUS'));
@@ -47,7 +52,15 @@ end
 parfor i=1:length(N) % This generate the meshes
     fprintf("============== Start MESH N = %d ==============\n", N(i));
 
+    fid = fopen(logfile, 'a');
+    fprintf(fid, 'Worker starting mesh N = %d at %s\n', N(i), datestr(now));
+    fclose(fid);
+
     MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,'','P','laplacian');
+
+    fid = fopen(logfile, 'a');
+    fprintf(fid, 'Worker starting mesh N = %d at %s\n', N(i), datestr(now));
+    fclose(fid);
 
 	fprintf("\n============== End MESH N = %d ==============\n", N(i));
 end
