@@ -22,7 +22,6 @@ addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
 addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESH')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
-addpath('~/petsc/share/petsc/matlab');
 
 %% Simulation - Setup
 run("../RunSetup.m")
