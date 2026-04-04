@@ -27,6 +27,9 @@ addpath('~/petsc/share/petsc/matlab');
 %% Simulation - Setup
 run("../RunSetup.m")
 
+%% Initialize Telegram Bot
+TelegramBot;
+
 %% Input Data - Boundary conditions - Forcing term
 % First I have generated the meshes for every N,it's the most expensive step
 % Then I read that meshes and use different polynomial degrees.
@@ -34,13 +37,19 @@ dataset = readtable('InputData.csv');
 h_vec = zeros(height(dataset),1);
 dataset.A_name = strings(height(dataset),1);
 dataset.F_name = strings(height(dataset),1);
+
 % Mesh Generation
 % if isempty(gcp('nocreate'))
 %     parpool(4);
 % end
+
 loc = 'Matrices/';
 DataTestLap;
 mu_diversi = 7; 
+
+message = "JOB STARTS: I'm generating the data";
+BotMess(Bot, message);
+
 % for j = 1:height(dataset)
 % 
 %     Data.N = dataset.N(j);
@@ -72,7 +81,8 @@ for j = 1:mu_diversi:height(dataset)
     Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
     Data.DirBC  = {str2func(dataset.g{j})};
     name = [num2str(Data.N), '_el.mat'];
-
+    
+    % Read the meshe name
     Data.meshfile = fullfile(Data.FolderName, name);
     
     [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
@@ -80,12 +90,19 @@ for j = 1:mu_diversi:height(dataset)
     [Matrices] = MatrixLaplacianST(Data, mesh.neighbor, femregion);
 
     PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
-    dataset.A_name(j) = "A" + ii + ".dat";
 
+    % Create the A name file for each of the mu_diversi rows
+    for k = j:mu_diversi
+        dataset.A_name(k) = "A" + ii + ".dat";
+    end
 end
 dataset.h = h_vec;
 dataset.F_name = "F" + dataset.ID + ".dat";
 writetable(dataset, 'dati.csv');
+message = "JOB FINISCED: data generated";
+BotMess(Bot, message);
+clear Bot;
+
 %if Data.MeshFromFile
     % Load existing mesh
     %Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);

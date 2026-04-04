@@ -53,13 +53,13 @@ parfor i=1:length(N) % This generate the meshes
     fprintf("============== Start MESH N = %d ==============\n", N(i));
 
     fid = fopen(logfile, 'a');
-    fprintf(fid, 'Worker starting mesh N = %d at %s\n', N(i), datestr(now));
+    fprintf(fid, 'Worker %d starting mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
     fclose(fid);
 
     MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,'','P','laplacian');
 
     fid = fopen(logfile, 'a');
-    fprintf(fid, 'Worker starting mesh N = %d at %s\n', N(i), datestr(now));
+    fprintf(fid, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
     fclose(fid);
 
 	fprintf("\n============== End MESH N = %d ==============\n", N(i));
