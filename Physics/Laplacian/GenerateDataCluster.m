@@ -44,9 +44,11 @@ h_vec = zeros(height(dataset),1);
 dataset.A_name = strings(height(dataset),1);
 dataset.F_name = strings(height(dataset),1);
 % We save id; pb_id; N, h, p, ndof, nnz, A_name, F_name
-output = table('Size', [height(dataset), 9]);
-output = table('ID','pb_ID', 'N', 'h', 'p', 'ndof', 'nnz', 'A_name', 'F_name');
+sz = [height(dataset), 9];
+varTypes = {'int32', 'int8', 'int32', 'double', 'int8', 'int32', 'int32', 'string', 'string'};
+varNames = {'ID', 'pb_ID', 'N', 'h', 'p', 'ndof', 'nnz', 'A_name', 'F_name'};
 
+output = table('Size', sz, 'VariableTypes', varTypes, 'VariableNames', varNames);
 logfile = fullfile(pwd, 'generate_meshes_runtime.log');
 fid = fopen(logfile, 'a');
 fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
