@@ -16,8 +16,7 @@ classdef Bot
         function obj = Bot()
             % Cerca il file config.json ovunque sia nel path di MATLAB
             % o usa un percorso relativo alla posizione della classe
-            folder = fileparts(mfilename('fullpath'));
-            fname = fullfile(folder, 'config.json');
+            fname = '/home/u10763935/config.json'; %on pc just config.json
             
             if ~isfile(fname)
                 error('Bot:ConfigNotFound', 'File config.json not found in: %s', fname);
