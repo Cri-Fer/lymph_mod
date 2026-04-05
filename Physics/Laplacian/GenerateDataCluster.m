@@ -27,7 +27,8 @@ if ~isfolder('Matrices/')
 end
 
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
-addpath('~/petsc/share/petsc/matlab');
+addpath('/usr/lib/petscdir/petsc3.19/x86_64-linux-gnu-real/share/petsc/matlab');
+%addpath('~/petsc/share/petsc/matlab');
 
 %% Simulation - Setup
 run("../RunSetup.m")
