@@ -50,14 +50,14 @@ SA_loc = mat2cell(zeros(femregion.nbases*max_nedges,femregion.nbases,femregion.n
 %% Loop over the elements
 
 % Visualization of computational progress
-prog = 0;
-fprintf(1,'Computation Progress: %3d%%\n',prog);
+% prog = 0;
+% fprintf(1,'Computation Progress: %3d%%\n',prog);
 
 for ie = 1:femregion.nel
 
     % Visualization of computational progress
-    prog = ( 100*(ie/femregion.nel) );
-    fprintf(1,'\b\b\b\b%3.0f%%',prog);
+    % prog = ( 100*(ie/femregion.nel) );
+    % fprintf(1,'\b\b\b\b%3.0f%%',prog);
 
     % Selection of the matrix positions associated to element ie
     index = (ie-1)*femregion.nbases*ones(femregion.nbases,1) + (1:femregion.nbases)';

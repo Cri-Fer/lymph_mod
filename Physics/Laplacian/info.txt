@@ -15,3 +15,7 @@ solving the system with AMG.
 LA matrice A è uguale fin tanto che mu resta uguale e N resta uguale.
 NB: mantenendo lo stesso ordine di dati nel csv, ma cambiando il numero di mu che si usano il tutto non dovrebbe rompersi
 basta cambiare con il numero di mu diversi
+
+Abbiamo usato un Bot telgram come notifica per il lavoro del cluster: 
+- inizio 
+- Fine

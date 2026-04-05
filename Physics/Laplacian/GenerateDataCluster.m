@@ -37,41 +37,73 @@ dataset = readtable('InputData.csv');
 h_vec = zeros(height(dataset),1);
 dataset.A_name = strings(height(dataset),1);
 dataset.F_name = strings(height(dataset),1);
-%dati = table('Size', [height(dataset), ]);
+% We save id; pb_id; N, h, p, ndof, nnz, A_name, F_name
+output = table('Size', [height(dataset), 9]);
+output = table('ID','pb_ID', 'N', 'h', 'p', 'ndof', 'nnz', 'A_name', 'F_name');
 
-% Mesh Generation
-% if isempty(gcp('nocreate'))
-%     parpool(4);
-% end
+logfile = fullfile(pwd, 'generate_meshes_runtime.log');
+fid = fopen(logfile, 'a');
+fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
+fclose(fid);
+%% Parallel initialization
+nCores = str2double(getenv('NCPUS'));
+if isnan(nCores)
+    nCores = 1; 
+end 
+if isempty(gcp('nocreate'))
+    parpool(nCores);
+end
 
+%% Mesh Generation
 loc = 'Matrices/';
 DataTestLap;
-diff_fun = 7; 
+diff_A = 20; % Every tot A changes 
 
 message = "JOB STARTS: I'm generating the data";
 bot.send_message(message);
 
-for j = 1:20%height(dataset)
+fid = fopen(logfile, 'a');
+fprintf(fid, '\n===== START F [%s] =====\n', datestr(now));
+fclose(fid);
 
-    Data.N = dataset.N(j);
-    Data.degree = dataset.p(j);
+output.ID = dataset.ID;
+output.N  = dataset.N;
+output.pb_ID = dataset.pb_ID;
+output.p = dataset.p;
+
+parfor j = 1:height(dataset)
+    data = CreateDataLap(); % Data has to be created because the functions use the Data
+
+    data.N = dataset.N(j);
+    data.degree = dataset.p(j);
     ii = dataset.ID(j);
     fprintf("========= Case id: %d =========", ii);
-    Data.mu = {str2func(dataset.mu{j})}; 
-    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
-    Data.DirBC  = {str2func(dataset.g{j})};
-    name = [num2str(Data.N), '_el.mat'];
+    
+    data.mu = {str2func(dataset.mu{j})}; 
+    data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+    data.DirBC  = {str2func(dataset.g{j})};
+    name = [num2str(data.N), '_el.mat'];
+    data.source
 
-    Data.meshfile = fullfile(Data.FolderName, name);
+    data.meshfile = fullfile(data.FolderName, name);
 
     % Efficient because it reads the mesh
-    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
-    [F] = ForcingLaplacian(Data, mesh.neighbor, femregion);
+    [mesh, femregion, h_val] = MeshFemregionSetup(Setup, data, {data.TagElLap}, {'L'});
+    h_vec(j) = h_val; % Must be like that 
+    [F] = ForcingLaplacian(data, mesh.neighbor, femregion);
 
     PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
+    
+
 
 
 end
+
+delete(gcp('nocreate'));
+
+fid = fopen(logfile, 'a');
+fprintf(fid, '\n===== START A [%s] =====\n', datestr(now));
+fclose(fid);
 
 for j = 1:diff_fun:height(dataset)
     Data.N = dataset.N(j);
@@ -94,38 +126,15 @@ for j = 1:diff_fun:height(dataset)
 
     % Create the A name file for each of the diff_fun rows
     for k = j:(diff_fun + j - 1)
-        dataset.A_name(k) = "A" + ii + ".dat";
+        output.A_name(k) = "A" + ii + ".dat";
+        output.nnz(k)    = nnz(A);
+        output.ndof(k)   = size(A, 1);
     end
 end
-dataset.h = h_vec;
-dataset.F_name = "F" + dataset.ID + ".dat";
+
+output.h = h_vec;
+output.F_name = "F" + dataset.ID + ".dat";
 writetable(dataset, 'dati.csv');
-message = "JOB FINISCED: data generated";
+message = "JOB FINISHED: data generated";
 bot.send_message(message);
 clear Bot;
-
-%if Data.MeshFromFile
-    % Load existing mesh
-    %Data.meshfile = fullfile(Data.FolderName, Data.meshfileseq);
-%else
-    % Create a new mesh
-    % if isempty(gcp('nocreate'))
-    %     parpool(4);
-    % end
-    % 
-    % parfor i=1:5 % This generate the 5 meshes
-    %     MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,meshname,'P','laplacian');
-    % end
-%end
-% 
-% Main
-% [Matrices, F, Data] = DataGenerator(Data,Setup);
-% 
-% % Send to PETSC
-% loc = 'Matrices/';
-% PetscBinaryWrite([loc, 'A', num2str(id) ,'.dat'], sparse(Matrices.A));
-% PetscBinaryWrite([loc, 'F', num2str(id) ,'.dat'], F);
-% 
-% T = table(Data.N, Data.h , Data.p, 2, ...
-%     'VariableNames', {'N', 'h','p', 'mu', 'f(x,y)', 'g(x,y)'});
-%      writetable(T, 'dati.csv');

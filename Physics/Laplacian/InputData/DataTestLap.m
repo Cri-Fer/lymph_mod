@@ -10,7 +10,7 @@ Data.LabBcLap = 'DDDD';    % Dirichlet/Neumann/Abso
 Data.domain       = [0 1 0 1]; % domain bounds for a new mesh
 Data.N            = 1;     % number of elements for a new mesh
 Data.MeshFromFile = false;      % read mesh from file
-Data.FolderName   = 'BIG_MESHES';
+Data.FolderName   = 'MESHES';
 Data.VTKMeshFileName = 'Mesh.vtk';
 Data.meshfileseq  = 'Quad_19600_el.mat'; %filename for mesh
 

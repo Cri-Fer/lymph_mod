@@ -32,7 +32,7 @@ run("../RunSetup.m")
 DataTestLap;
 % Mesh Generation
 
-N = [10:1.5:19, 21]' .* 10^3;
+N = 500;%[10:1.5:19, 21]' .* 10^3;
 % fprintf("Starting to generate meshes\n");
 % fprintf("================================\n");
 
@@ -43,7 +43,9 @@ fclose(fid);
 
 % Legge il numero di core assegnati da PBS (variabile d'ambiente)
 nCores = str2double(getenv('NCPUS'));
-if isnan(nCores), nCores = 4; end % Default se lanciato localmente
+if isnan(nCores)
+    nCores = 1; 
+end 
 
 if isempty(gcp('nocreate'))
     parpool(nCores);
