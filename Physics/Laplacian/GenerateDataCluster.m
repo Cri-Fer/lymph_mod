@@ -20,7 +20,7 @@ MyPhysicsPath = pwd;
 addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
-addpath(genpath(fullfile(MyPhysicsPath,'MESH')));
+addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESHES')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 addpath('~/petsc/share/petsc/matlab');
 
@@ -56,7 +56,7 @@ end
 
 %% Mesh Generation
 loc = 'Matrices/';
-DataTestLap;
+Data = CreateDataLap();
 diff_A = 20; % Every tot A changes 
 
 message = "JOB STARTS: I'm generating the data";
@@ -137,4 +137,4 @@ output.F_name = "F" + dataset.ID + ".dat";
 writetable(dataset, 'dati.csv');
 message = "JOB FINISHED: data generated";
 bot.send_message(message);
-clear Bot;
+clear bot;
