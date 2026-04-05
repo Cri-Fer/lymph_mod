@@ -21,6 +21,11 @@ addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
 addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESHES')));
+
+if ~isfolder('Matrices/')
+    mkdir('Matrices/')
+end
+
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 addpath('~/petsc/share/petsc/matlab');
 
