@@ -1,7 +1,7 @@
 function [mesh, femregion, h] = MeshFemregionSetup(Setup, Data, TagEl, LabelEl)
 
     %% Load Region
-    fprintf('\nLoading Region ... \n');
+    %fprintf('\nLoading Region ... \n');
     
     mesh = load(Data.meshfile);
     
@@ -25,12 +25,12 @@ function [mesh, femregion, h] = MeshFemregionSetup(Setup, Data, TagEl, LabelEl)
     end
 
     %% Creation of the finite element space
-    fprintf('\nMake femregion ... ')
+    %fprintf('\nMake femregion ... ')
     
     [femregion] = CreateDOF(Data, mesh.region);
     
-    fprintf('\nDone\n')
-    fprintf('\n------------------------------------------------------------------\n')
+    %fprintf('\nDone\n')
+    %fprintf('\n------------------------------------------------------------------\n')
        
     %% Plot polygonal mesh
     if Setup.isPlotMesh

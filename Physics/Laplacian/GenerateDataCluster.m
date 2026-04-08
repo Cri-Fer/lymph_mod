@@ -74,6 +74,8 @@ bot.send_message(message);
 fid = fopen(logfile, 'a');
 fprintf(fid, '\n===== START F [%s] =====\n', datestr(now));
 fclose(fid);
+message = "START F";
+bot.send_message(message);
 
 output.ID = dataset.ID;
 output.N  = dataset.N;
@@ -92,7 +94,6 @@ parfor j = 1:height(dataset)
     data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
     data.DirBC  = {str2func(dataset.g{j})};
     name = [num2str(data.N), '_el.mat'];
-    data.source
 
     data.meshfile = fullfile(data.FolderName, name);
 
@@ -113,6 +114,8 @@ delete(gcp('nocreate'));
 fid = fopen(logfile, 'a');
 fprintf(fid, '\n===== START A [%s] =====\n', datestr(now));
 fclose(fid);
+message = "START A";
+bot.send_message(message);
 
 for j = 1:diff_fun:height(dataset)
     Data.N = dataset.N(j);
@@ -139,6 +142,8 @@ for j = 1:diff_fun:height(dataset)
         output.nnz(k)    = nnz(A);
         output.ndof(k)   = size(A, 1);
     end
+
+    clear Matrices mesh femregion;
 end
 
 output.h = h_vec;
