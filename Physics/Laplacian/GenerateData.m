@@ -20,7 +20,7 @@ MyPhysicsPath = pwd;
 addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
-addpath(genpath(fullfile(MyPhysicsPath,'MESH')));
+addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESHES/')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 addpath('~/petsc/share/petsc/matlab');
 
@@ -28,7 +28,7 @@ addpath('~/petsc/share/petsc/matlab');
 run("../RunSetup.m")
 
 %% Initialize Telegram Bot
-bot = Bot();
+%bot = Bot();
 
 %% Input Data - Boundary conditions - Forcing term
 % First I have generated the meshes for every N,it's the most expensive step
@@ -48,10 +48,10 @@ loc = 'Matrices/';
 DataTestLap;
 diff_fun = 7; 
 
-message = "JOB STARTS: I'm generating the data";
-bot.send_message(message);
+% message = "JOB STARTS: I'm generating the data";
+% bot.send_message(message);
 
-for j = 1:20%height(dataset)
+for j = 1:21:22%height(dataset)
 
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
@@ -73,7 +73,7 @@ for j = 1:20%height(dataset)
 
 end
 
-for j = 1:diff_fun:height(dataset)
+for j = 1:21:22%diff_fun:height(dataset)
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
     ii = dataset.ID(j);
@@ -100,9 +100,9 @@ end
 dataset.h = h_vec;
 dataset.F_name = "F" + dataset.ID + ".dat";
 writetable(dataset, 'dati.csv');
-message = "JOB FINISCED: data generated";
-bot.send_message(message);
-clear Bot;
+% message = "JOB FINISCED: data generated";
+% bot.send_message(message);
+% clear Bot;
 
 %if Data.MeshFromFile
     % Load existing mesh
