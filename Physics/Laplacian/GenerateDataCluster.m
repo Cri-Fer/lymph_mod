@@ -49,6 +49,7 @@ varTypes = {'int32', 'int8', 'int32', 'double', 'int8', 'int32', 'int32', 'strin
 varNames = {'ID', 'pb_ID', 'N', 'h', 'p', 'ndof', 'nnz', 'A_name', 'F_name'};
 
 output = table('Size', sz, 'VariableTypes', varTypes, 'VariableNames', varNames);
+
 logfile = fullfile(pwd, 'generate_meshes_runtime.log');
 fid = fopen(logfile, 'a');
 fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
@@ -62,7 +63,7 @@ if isempty(gcp('nocreate'))
     parpool(nCores);
 end
 
-%% Mesh Generation
+%% Matrix Generation
 loc = 'Matrices/';
 Data = CreateDataLap();
 diff_A = 20; % Every tot A changes 
