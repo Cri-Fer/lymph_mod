@@ -58,9 +58,11 @@ for j = 1:21:22%height(dataset)
     ii = dataset.ID(j);
     fprintf("========= Case id: %d =========", ii);
     Data.mu = {str2func(dataset.mu{j})}; 
-    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+    Data.source = {str2func([ dataset.mu{j}, '.*(',dataset.f{j}, ')'])};
     Data.DirBC  = {str2func(dataset.g{j})};
     name = [num2str(Data.N), '_el.mat'];
+    Data.mu
+    Data.source
 
     Data.meshfile = fullfile(Data.FolderName, name);
 

@@ -82,7 +82,7 @@ output.N  = dataset.N;
 output.pb_ID = dataset.pb_ID;
 output.p = dataset.p;
 
-parfor j = 1:21:22%height(dataset)
+parfor j = 1:height(dataset)
     data = CreateDataLap(); % Data has to be created because the functions use the Data
 
     data.N = dataset.N(j);
@@ -114,7 +114,7 @@ fclose(fid);
 message = "START A";
 bot.send_message(message);
 
-for j = 1:21:22%:diff_fun:height(dataset)
+for j = 1:iff_fun:height(dataset)
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
     ii = dataset.ID(j);
