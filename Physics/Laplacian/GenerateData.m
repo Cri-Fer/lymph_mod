@@ -46,10 +46,32 @@ dataset.F_name = strings(height(dataset),1);
 
 loc = 'Matrices/';
 DataTestLap;
-diff_fun = 7; 
+diff_fun = 11; 
 
 % message = "JOB STARTS: I'm generating the data";
 % bot.send_message(message);
+
+for j = 1:12%diff_fun:height(dataset)
+    Data.N = dataset.N(j);
+    Data.degree = dataset.p(j);
+    ii = dataset.ID(j);
+    fprintf("========= Case id: %d =========\n", ii);
+    Data.mu = {str2func(dataset.mu{j})}; 
+    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+    Data.DirBC  = {str2func(dataset.g{j})};
+    name = [num2str(Data.N), '_el.mat'];
+    
+    % Read the meshe name
+    Data.meshfile = fullfile(Data.FolderName, name);
+    
+    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
+
+    [Matrices] = MatrixLaplacianST(Data, mesh.neighbor, femregion);
+
+    PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
+
+
+end
 
 for j = 1:21:22%height(dataset)
 
@@ -71,34 +93,15 @@ for j = 1:21:22%height(dataset)
     [F] = ForcingLaplacian(Data, mesh.neighbor, femregion);
 
     PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
-
-
-end
-
-for j = 1:21:22%diff_fun:height(dataset)
-    Data.N = dataset.N(j);
-    Data.degree = dataset.p(j);
-    ii = dataset.ID(j);
-    fprintf("========= Case id: %d =========", ii);
-    Data.mu = {str2func(dataset.mu{j})}; 
-    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
-    Data.DirBC  = {str2func(dataset.g{j})};
-    name = [num2str(Data.N), '_el.mat'];
-    
-    % Read the meshe name
-    Data.meshfile = fullfile(Data.FolderName, name);
-    
-    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
-
-    [Matrices] = MatrixLaplacianST(Data, mesh.neighbor, femregion);
-
-    PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
-
     % Create the A name file for each of the diff_fun rows
     for k = j:(diff_fun + j - 1)
-        dataset.A_name(k) = "A" + ii + ".dat";
+        dataset.A_name(k) = "F" + ii + ".dat";
     end
+
+
 end
+
+
 dataset.h = h_vec;
 dataset.F_name = "F" + dataset.ID + ".dat";
 writetable(dataset, 'dati.csv');

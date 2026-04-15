@@ -25,7 +25,7 @@ Data.BetaNM  = 0.25;
 Data.GammaNM = 0.5;
 
 % Space discretization
-Data.degree        = 2;  % Polynomial degree
+Data.degree        = 3;  % Polynomial degree
 Data.penalty_coeff = 10; % Penalty coefficient
 
 %% Quadrature settings

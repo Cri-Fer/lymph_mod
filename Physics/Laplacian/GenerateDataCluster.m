@@ -55,18 +55,18 @@ fid = fopen(logfile, 'a');
 fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
 fclose(fid);
 %% Parallel initialization
-nCores = str2double(getenv('NCPUS'));
-if isnan(nCores)
-    nCores = 1; 
-end 
-if isempty(gcp('nocreate'))
-    parpool(nCores);
-end
+% nCores = str2double(getenv('NCPUS'));
+% if isnan(nCores)
+%     nCores = 1; 
+% end 
+% if isempty(gcp('nocreate'))
+%     parpool(nCores);
+% end
 
 %% Matrix Generation
 loc = 'Matrices/';
 Data = CreateDataLap();
-diff_A = 20; % Every tot A changes 
+jump= 11; % Every tot A changes 
 
 message = "JOB STARTS: I'm generating the data";
 bot.send_message(message);
@@ -82,7 +82,7 @@ output.N  = dataset.N;
 output.pb_ID = dataset.pb_ID;
 output.p = dataset.p;
 
-parfor j = 1:height(dataset)
+for j = 1:jump:height(dataset)
     data = CreateDataLap(); % Data has to be created because the functions use the Data
 
     data.N = dataset.N(j);
@@ -103,10 +103,15 @@ parfor j = 1:height(dataset)
     [F] = ForcingLaplacian(data, mesh.neighbor, femregion);
 
     PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
+
+    % Create the A name file for each of the diff_fun rows
+    for k = j:(jump + j - 1)
+        output.F_name(k) = "F" + ii + ".dat";
+    end
     
 end
 
-delete(gcp('nocreate'));
+% delete(gcp('nocreate'));
 
 fid = fopen(logfile, 'a');
 fprintf(fid, '\n===== START A [%s] =====\n', datestr(now));
@@ -114,7 +119,7 @@ fclose(fid);
 message = "START A";
 bot.send_message(message);
 
-for j = 1:iff_fun:height(dataset)
+for j = 1:height(dataset)/2
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
     ii = dataset.ID(j);
@@ -134,17 +139,47 @@ for j = 1:iff_fun:height(dataset)
     PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
 
     % Create the A name file for each of the diff_fun rows
-    for k = j:(diff_fun + j - 1)
-        output.A_name(k) = "A" + ii + ".dat";
-        output.nnz(k)    = nnz(A);
-        output.ndof(k)   = size(A, 1);
-    end
+    output.A_name(k) = "A" + ii + ".dat";
+    output.nnz(k)    = nnz(A);
+    output.ndof(k)   = size(A, 1);
+
+    clear Matrices mesh femregion;
+end
+
+fid = fopen(logfile, 'a');
+fprintf(fid, '\n===== 50% of A generated [%s] =====\n', datestr(now));
+fclose(fid);
+message = "50% of A Generated";
+bot.send_message(message);
+
+for j = height(dataset)/2:height(dataset)
+    Data.N = dataset.N(j);
+    Data.degree = dataset.p(j);
+    ii = dataset.ID(j);
+    fprintf("========= Case id: %d =========", ii);
+    Data.mu = {str2func(dataset.mu{j})}; 
+    Data.source = {str2func([dataset.mu{j}, '.*',dataset.f{j}])};
+    Data.DirBC  = {str2func(dataset.g{j})};
+    name = [num2str(Data.N), '_el.mat'];
+    
+    % Read the meshe name
+    Data.meshfile = fullfile(Data.FolderName, name);
+    
+    [mesh, femregion, h_vec(j)] = MeshFemregionSetup(Setup, Data, {Data.TagElLap}, {'L'});
+
+    [Matrices] = MatrixLaplacianST(Data, mesh.neighbor, femregion);
+
+    PetscBinaryWrite([loc, 'A', num2str(ii) ,'.dat'], sparse(Matrices.A));
+
+    % Create the A name file for each of the diff_fun rows
+    output.A_name(k) = "A" + ii + ".dat";
+    output.nnz(k)    = nnz(A);
+    output.ndof(k)   = size(A, 1);
 
     clear Matrices mesh femregion;
 end
 
 output.h = h_vec;
-output.F_name = "F" + dataset.ID + ".dat";
 writetable(output, 'output.csv');
 message = "JOB FINISHED: data generated";
 bot.send_message(message);
