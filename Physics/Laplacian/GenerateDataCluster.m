@@ -106,7 +106,7 @@ for j = 1:jump:height(dataset)
 
     % Create the A name file for each of the diff_fun rows
     for k = j:(jump + j - 1)
-        output.F_name(k) = "F" + ii + ".dat";
+        output.F_name(k) = "F" + (ii+j) + ".dat";
     end
     
 end
