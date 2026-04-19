@@ -32,7 +32,7 @@ run("../RunSetup.m")
 DataTestLap;
 % Mesh Generation
 
-N = [1:3:19]' .* 10^3;
+N = [3:2:17]' .* 10^3;
 fprintf(1, 'Starting to generate meshes [%s]\n', datestr(now));
 fprintf(1, '================================\n');
 
