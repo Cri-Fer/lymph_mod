@@ -25,7 +25,7 @@ addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 
 %% Simulation - Setup
 run("../RunSetup.m")
-
+bot = Bot();
 %% Input Data - Boundary conditions - Forcing term
 % First I have generated the meshes for every N,it's the most expensive step
 % Then I read that meshes and use different polynomial degrees.
@@ -35,7 +35,8 @@ DataTestLap;
 N = [3:2:17]' .* 10^3;
 fprintf(1, 'Starting to generate meshes [%s]\n', datestr(now));
 fprintf(1, '================================\n');
-
+message = "JOB STARTS: I'm generating the meshes";
+bot.send_message(message);
 %logfile = fullfile(pwd, 'generate_meshes_runtime.log');
 %fid = fopen(logfile, 'a');
 %fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
@@ -64,7 +65,8 @@ parfor i=1:length(N) % This generate the meshes
     %fprintf(fid, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
     %fclose(fid);
     fprintf(1, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
-
-	fprintf(1, '\n============== ALL MESHES GENERATED ==============\n');
+    bot.send_message('Mesh N = %d finished', N(i));
 end
 
+fprintf(1, '\n============== ALL MESHES GENERATED ==============\n');
+bot.send_message('ALL MESHES GENERATED'); 
