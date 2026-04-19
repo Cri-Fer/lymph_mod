@@ -210,13 +210,15 @@ SA   = sparse(ii_index_neigh,jj_index_neigh,SA_loc,femregion.ndof,femregion.ndof
 
 %% Symmetric Interior Penalty Method
 
-dGA = A + SA; % For error computation in dG-norm
+%dGA = A + SA; % For error computation in dG-norm
 
-A = dGA - IA - transpose(IA); % dG stiffness matrix
+A = A + SA - IA - transpose(IA); %dGA - IA - transpose(IA); % dG stiffness matrix
 
 % Build the Matrices structure
-Matrices = struct('Mprj', Mprj, ...
-    'A',    A,    ...
-    'dGA',  dGA);
+% Matrices = struct('Mprj', Mprj, ...
+%     'A',    A,    ...
+%     'dGA',  dGA);
 
+Matrices = struct('Mprj', Mprj, ...
+    'A',    A);
 end

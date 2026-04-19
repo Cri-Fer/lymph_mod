@@ -45,7 +45,7 @@ bot.send_message(message);
 % Legge il numero di core assegnati da PBS (variabile d'ambiente)
 nCores = str2double(getenv('NCPUS'));
 if isnan(nCores)
-    nCores = 1; 
+    nCores = 4; 
 end 
 
 if isempty(gcp('nocreate'))
@@ -65,7 +65,7 @@ parfor i=1:length(N) % This generate the meshes
     %fprintf(fid, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
     %fclose(fid);
     fprintf(1, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
-    bot.send_message('Mesh N = %d finished', N(i));
+    
 end
 
 fprintf(1, '\n============== ALL MESHES GENERATED ==============\n');

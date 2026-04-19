@@ -18,7 +18,7 @@
 %==========================================================================
 function [neighbor] = MakeNeighborInternal(region)
 
-disp("Neighbor structure construction:");
+%disp("Neighbor structure construction:");
 
 % Extract number of elements and mesh connectivity
 ne           = region.ne;
@@ -69,10 +69,10 @@ for ii = 1:(ne-1)
     end
 
 
-    if mod(ii,1000) == 0
-        strprint = strcat(" - ", strcat(num2str(ii))," elements processed!");
-        disp(strprint)
-    end
+    % if mod(ii,1000) == 0
+    %     strprint = strcat(" - ", strcat(num2str(ii))," elements processed!");
+    %     disp(strprint)
+    % end
     
 end
 

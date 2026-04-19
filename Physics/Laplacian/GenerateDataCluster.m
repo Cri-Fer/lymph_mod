@@ -27,8 +27,8 @@ if ~isfolder('Matrices/')
 end
 
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
-addpath('/usr/lib/petscdir/petsc3.19/x86_64-linux-gnu-real/share/petsc/matlab');
-%addpath('~/petsc/share/petsc/matlab');
+%addpath('/usr/lib/petscdir/petsc3.19/x86_64-linux-gnu-real/share/petsc/matlab');
+addpath('~/petsc/share/petsc/matlab');
 
 %% Simulation - Setup
 run("../RunSetup.m")
@@ -62,7 +62,10 @@ fclose(fid);
 % if isempty(gcp('nocreate'))
 %     parpool(nCores);
 % end
-
+nCores = 4;
+if isempty(gcp('nocreate'))
+    parpool(nCores);
+end
 %% Matrix Generation
 loc = 'Matrices/';
 Data = CreateDataLap();
@@ -104,9 +107,9 @@ for j = 1:jump:height(dataset)
 
     PetscBinaryWrite([loc, 'F', num2str(ii) ,'.dat'], F);
 
-    % Create the A name file for each of the diff_fun rows
+    % Create the F name file for each of the diff_fun rows
     for k = j:(jump + j - 1)
-        output.F_name(k) = "F" + (ii+j) + ".dat";
+        output.F_name(k) = "F" + ii + ".dat";
     end
     
 end
