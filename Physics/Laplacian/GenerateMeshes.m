@@ -20,7 +20,7 @@ MyPhysicsPath = pwd;
 addpath(genpath(fullfile(MyPhysicsPath,'Assembly')));
 addpath(genpath(fullfile(MyPhysicsPath,'InputData')));
 addpath(genpath(fullfile(MyPhysicsPath,'MainFunctions')));
-addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESH')));
+addpath(genpath(fullfile(MyPhysicsPath,'BIG_MESHES')));
 addpath(genpath(fullfile(MyPhysicsPath,'Matrices')));
 
 %% Simulation - Setup
@@ -33,13 +33,13 @@ DataTestLap;
 % Mesh Generation
 
 N = [1:3:19]' .* 10^3;
-% fprintf("Starting to generate meshes\n");
-% fprintf("================================\n");
+fprintf("Starting to generate meshes [\%s]\n", , datestr(now));
+fprintf("================================\n");
 
-logfile = fullfile(pwd, 'generate_meshes_runtime.log');
-fid = fopen(logfile, 'a');
-fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
-fclose(fid);
+%logfile = fullfile(pwd, 'generate_meshes_runtime.log');
+%fid = fopen(logfile, 'a');
+%fprintf(fid, '\n===== JOB START %s =====\n', datestr(now));
+%fclose(fid);
 
 % Legge il numero di core assegnati da PBS (variabile d'ambiente)
 nCores = str2double(getenv('NCPUS'));
@@ -52,17 +52,18 @@ if isempty(gcp('nocreate'))
 end
 
 parfor i=1:length(N) % This generate the meshes
-    fprintf("============== Start MESH N = %d ==============\n", N(i));
-
-    fid = fopen(logfile, 'a');
-    fprintf(fid, 'Worker %d starting mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
-    fclose(fid);
+    %fprintf("============== Start MESH N = %d ==============\n", N(i));
+    fprintf('Worker %d starting mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
+    %fid = fopen(logfile, 'a');
+    %fprintf(fid, 'Worker %d starting mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
+    %fclose(fid);
 
     MakeMeshMonodomain(Data,N(i),Data.domain,Data.FolderName,'','P','laplacian');
 
-    fid = fopen(logfile, 'a');
-    fprintf(fid, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
-    fclose(fid);
+    %fid = fopen(logfile, 'a');
+    %fprintf(fid, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
+    %fclose(fid);
+    fprintf('Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
 
 	fprintf("\n============== End MESH N = %d ==============\n", N(i));
 end
