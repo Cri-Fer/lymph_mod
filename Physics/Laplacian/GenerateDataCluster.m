@@ -139,7 +139,7 @@ for j = 1:jump:height(dataset)
 
     % Create the F name file for each of the diff_fun rows
     for k = j:(jump + j - 1)
-        F_name(j) = "F" + num2str(ii) + ".dat";
+        F_name(k) = "F" + num2str(ii) + ".dat";
     end
     
 end
