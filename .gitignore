@@ -2,3 +2,5 @@
 *.asv
 config.json
 *.log
+*.csv#
+.~lock.*
