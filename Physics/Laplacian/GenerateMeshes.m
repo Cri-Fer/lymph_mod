@@ -33,8 +33,8 @@ DataTestLap;
 % Mesh Generation
 
 N = [1:3:19]' .* 10^3;
-fprintf("Starting to generate meshes [\%s]\n", , datestr(now));
-fprintf("================================\n");
+fprintf(1, 'Starting to generate meshes [%s]\n', datestr(now));
+fprintf(1, '================================\n');
 
 %logfile = fullfile(pwd, 'generate_meshes_runtime.log');
 %fid = fopen(logfile, 'a');
@@ -53,7 +53,7 @@ end
 
 parfor i=1:length(N) % This generate the meshes
     %fprintf("============== Start MESH N = %d ==============\n", N(i));
-    fprintf('Worker %d starting mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
+    fprintf(1, 'Worker %d starting mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
     %fid = fopen(logfile, 'a');
     %fprintf(fid, 'Worker %d starting mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
     %fclose(fid);
@@ -63,8 +63,8 @@ parfor i=1:length(N) % This generate the meshes
     %fid = fopen(logfile, 'a');
     %fprintf(fid, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
     %fclose(fid);
-    fprintf('Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
+    fprintf(1, 'Worker %d finished mesh N = %d at %s\n', getCurrentTask().ID, N(i), datestr(now));
 
-	fprintf("\n============== End MESH N = %d ==============\n", N(i));
+	fprintf(1, '\n============== ALL MESHES GENERATED ==============\n');
 end
 
