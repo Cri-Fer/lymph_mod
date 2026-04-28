@@ -51,7 +51,7 @@ diff_fun = 11;
 % message = "JOB STARTS: I'm generating the data";
 % bot.send_message(message);
 
-for j = 1:12%diff_fun:height(dataset)
+for j = 1:2%diff_fun:height(dataset)
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
     ii = dataset.ID(j);
@@ -73,7 +73,7 @@ for j = 1:12%diff_fun:height(dataset)
 
 end
 
-for j = 1:21:22%height(dataset)
+for j = 1:2%21:22%height(dataset)
 
     Data.N = dataset.N(j);
     Data.degree = dataset.p(j);
