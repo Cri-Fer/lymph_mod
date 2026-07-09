@@ -30,11 +30,11 @@ Data.NPtsVisualization = 5;
 Data.mu       = {@(x,y) 2};
 
 % Forcing Term
-Data.source = {@(x,y) 0};
+Data.source = {@(x,y) sin(pi*x).*sin(pi*y)};
 
 
 % Boundary Conditions
-Data.DirBC    = {@(x,y) 0};
+Data.DirBC    = {@(x,y) 0.*x.*y};
 
 % Exact Solution (if any)
 Data.u_ex     =  {@(x,y) sin(2*pi*x).* cos(2*pi*y)};

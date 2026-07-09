@@ -1,0 +1,15 @@
+mu1     -> const
+mu2     -> const
+mu3     -> const
+mu4     -> piece-wise const
+mu5     -> piece-wise const
+mu6     -> chess board
+mu7     -> chess board with larges squares
+mu8     -> circle not centered
+mu9     -> toroid
+mu10    -> random circles like porous media
+mu11    -> random circles (6 max rad 0.15)
+mu12    -> random circles 500 radius max 0.005
+mu13    -> piece wise constant between 2 regions
+mu14    -> mixing of chess board and cicles
+mu15    -> high random circles (1000, max radius 0.0025)
